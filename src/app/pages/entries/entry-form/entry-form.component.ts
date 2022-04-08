@@ -114,7 +114,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   private loadEntry() {
     if (this.currentAction == 'edit') {
       this.route.paramMap.pipe(
-        switchMap(params => this.entryService.getById(+params.get('id')))
+        switchMap(params => this.entryService.getById(params.get('id')))
       )
         .subscribe(
           (entry) => {
@@ -165,7 +165,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     toastr.success("Solicitação processada com sucesso")
     // redirect/reload component page
     this.router.navigateByUrl('entries', { skipLocationChange: true }).then(
-      () => this.router.navigate(["entries", entry.id, "edit"])
+      () => this.router.navigate(["entries"])
     )
   }
 

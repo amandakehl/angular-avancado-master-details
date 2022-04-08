@@ -6,9 +6,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDatabase } from './pages/in-memory-database';
-
 @NgModule({
   declarations: [
     AppComponent
@@ -17,8 +14,7 @@ import { InMemoryDatabase } from './pages/in-memory-database';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule,
-    HttpClientInMemoryWebApiModule.forRoot(InMemoryDatabase) // Para usar back-end externo, precisa remover essa linha e apagar o arquivo do in memory 
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

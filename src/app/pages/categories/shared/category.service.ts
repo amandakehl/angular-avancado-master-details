@@ -11,19 +11,20 @@ import { Category } from './category.model';
 })
 export class CategoryService {
 
-  private apiPath: string = "api/categories";
+  private apiPath: string = 'https://p38yx781aa.execute-api.us-east-1.amazonaws.com/Stage/categorias';
+  private userId: string = 'user_id=amanda_kehl';
 
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<Category[]> {
-    return this.http.get(this.apiPath).pipe(
+    return this.http.get(this.apiPath + "?" + this.userId).pipe(
       catchError(this.handleError),
       map(this.jsonDataToCategories)
     )
   }
 
-  getById(id: number): Observable<Category> {
-    const url = `${this.apiPath}/${id}`
+  getById(id: any): Observable<Category> {
+    const url = `${this.apiPath}/${id}/?${this.userId}`
 
     return this.http.get(url).pipe(
       catchError(this.handleError),
@@ -32,6 +33,8 @@ export class CategoryService {
   }
 
   create(category: Category): Observable<Category> {
+    category.id = category.name;
+
     return this.http.post(this.apiPath, category).pipe(
       catchError(this.handleError),
       map(this.jsonDataToCategory)
@@ -39,7 +42,7 @@ export class CategoryService {
   }
 
   update(category: Category): Observable<Category> {
-    const url = `${this.apiPath}/${category.id}`
+    const url = `${this.apiPath}?${category.id}/${category.user_id}`;
 
     return this.http.post(url, category).pipe(
       catchError(this.handleError),
@@ -47,8 +50,8 @@ export class CategoryService {
     )
   }
 
-  delete(id: number): Observable<any> {
-    const url = `${this.apiPath}/${id}`
+  delete(id: any): Observable<any> {
+    const url = `${this.apiPath}?${this.userId}&id=${id}`;
 
     return this.http.delete(url).pipe(
       catchError(this.handleError),
