@@ -13,21 +13,24 @@ import { Entry } from './entry.model';
 })
 export class EntryService {
 
-    private apiPath: string = "api/entries";
+    private apiPath: string = 'https://p38yx781aa.execute-api.us-east-1.amazonaws.com/Stage/lancamentos';
+    private userId: string = 'user_id=amanda_kehl';
 
     constructor(
         private http: HttpClient,
         private CategoryService: CategoryService) { }
 
     getAll(): Observable<Entry[]> {
-        return this.http.get(this.apiPath).pipe(
+        const url = `${this.apiPath}?${this.userId}`
+
+        return this.http.get(url).pipe(
             catchError(this.handleError),
             map(this.jsonDataToEntries)
         )
     }
 
-    getById(id: number): Observable<Entry> {
-        const url = `${this.apiPath}/${id}`
+    getById(id: string): Observable<Entry> {
+        const url = `${this.apiPath}/${id}/?${this.userId}`
 
         return this.http.get(url).pipe(
             catchError(this.handleError),
@@ -36,7 +39,9 @@ export class EntryService {
     }
 
     create(entry: Entry): Observable<Entry> {
-        return this.CategoryService.getById(entry.categoryId).pipe(
+        entry.id = entry.name;
+
+        return this.CategoryService.getById(entry.id).pipe(
             flatMap(category => {
                 entry.category = category;
 
@@ -49,9 +54,9 @@ export class EntryService {
     }
 
     update(entry: Entry): Observable<Entry> {
-        const url = `${this.apiPath}/${entry.id}`
+        const url = `${this.apiPath}?${entry.id}/${entry.user_id}`;
 
-        return this.CategoryService.getById(entry.categoryId).pipe(
+        return this.CategoryService.getById(entry.id).pipe(
             flatMap(category => {
                 entry.category = category;
 
@@ -63,8 +68,8 @@ export class EntryService {
         )
     }
 
-    delete(id: number): Observable<any> {
-        const url = `${this.apiPath}/${id}`
+    delete(id: any): Observable<any> {
+        const url = `${this.apiPath}?${this.userId}&id=${id}`;
 
         return this.http.delete(url).pipe(
             catchError(this.handleError),
